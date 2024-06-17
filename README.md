@@ -19,6 +19,7 @@ const options = {
       const callback = (f) => {
         arr.push(f);
         if (arr.length == 2) {
+          arr.sort((a,b) => b.size-a.size);
           done(arr);
         }
       };
