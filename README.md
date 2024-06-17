@@ -1,3 +1,48 @@
+### use node16 and yarn
+
+### alow to upload thumbnail
+```
+const options = {
+  thumbnailWidth: 120,
+  thumbnailHeight: 120,
+  thumbnailMethod: "crop",
+  resizeWidth: 1200,
+  resizeMimeType: "image/jpeg",
+  resizeQuality: 0.8,
+  resizeMethod: "contain",
+  transformFile(file, done) {
+    if (
+      (this.options.resizeWidth || this.options.resizeHeight) &&
+      file.type.match(/image.*/)
+    ) {
+      const arr = [];
+      const callback = (f) => {
+        arr.push(f);
+        if (arr.length == 2) {
+          done(arr);
+        }
+      };
+      this.resizeImage(
+        file,
+        this.options.resizeWidth,
+        this.options.resizeHeight,
+        this.options.resizeMethod,
+        callback
+      );
+      this.resizeImage(
+        file,
+        this.options.thumbnailWidth,
+        this.options.thumbnailHeight,
+        this.options.thumbnailMethod,
+        callback
+      );
+    } else {
+      return done(file);
+    }
+  }
+};
+```
+
 <img alt="Dropzone.js" src="https://raw.githubusercontent.com/dropzone/dropzone/assets/github-logo.svg" />
 
 [![Test and Release](https://github.com/dropzone/dropzone/actions/workflows/test-and-release.yml/badge.svg)](https://github.com/dropzone/dropzone/actions/workflows/test-and-release.yml)

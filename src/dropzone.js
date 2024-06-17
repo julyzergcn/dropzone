@@ -1461,7 +1461,16 @@ export default class Dropzone extends Emitter {
       // Has to be last because some servers (eg: S3) expect the file to be the last parameter
       for (let i = 0; i < dataBlocks.length; i++) {
         let dataBlock = dataBlocks[i];
-        formData.append(dataBlock.name, dataBlock.data, dataBlock.filename);
+        // formData.append(dataBlock.name, dataBlock.data, dataBlock.filename);
+        if (Array.isArray(dataBlock.data)) {
+          dataBlock.data.forEach((data, index) => {
+            let name = index == 0 ? dataBlock.name: 'thumbnail';
+            formData.append(name, data, dataBlock.filename);
+          });
+        }
+        else {
+          formData.append(dataBlock.name, dataBlock.data, dataBlock.filename);
+        }
       }
 
       this.submitRequest(xhr, formData, files);
